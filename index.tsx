@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import * as ReactDOM from 'react-dom';
 import { usePdf } from '@mikecousins/react-pdf';
 
+const GET_PDF_API_ENDPOINT = 'http://127.0.0.1:50991/';
+
 type ApiResponse = {
     /** filename */
     name: string;
@@ -32,7 +34,7 @@ const App: React.FC = () => {
     const [file, setFile] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:50991/')
+        fetch(GET_PDF_API_ENDPOINT)
             .then(response => response.json())
             .then((data: ApiResponse) => {
                 setFile(`data:application/pdf;base64,${data.bin}`);
