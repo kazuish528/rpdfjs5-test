@@ -3,8 +3,15 @@ import { useState, useEffect, useRef } from 'react';
 import * as ReactDOM from 'react-dom';
 import { usePdf } from '@mikecousins/react-pdf';
 
+type ApiResponse = {
+    /** filename */
+    name: string;
+    /** base64 encoded pdf */
+    bin: string;
+}
+
 type PdfRenderProps = {
-    file: string
+    file: string;
 };
 
 const PdfRender: React.FC<PdfRenderProps> = ({ file }) => {
@@ -23,11 +30,13 @@ const PdfRender: React.FC<PdfRenderProps> = ({ file }) => {
 
 const App: React.FC = () => {
     const [file, setFile] = useState<string | null>(null);
-    
+
     useEffect(() => {
-        fetch('http://127.0.0.1:50991/').then(response => response.json()).then(data => {
-            setFile(`data:application/pdf;base64,${data.bin}`);
-        });
+        fetch('http://127.0.0.1:50991/')
+            .then(response => response.json())
+            .then((data: ApiResponse) => {
+                setFile(`data:application/pdf;base64,${data.bin}`);
+            });
     }, []);
 
     return file ? <PdfRender file={file} /> : <div>loading...</div>;
